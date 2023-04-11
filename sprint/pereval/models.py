@@ -30,18 +30,30 @@ class PerevalAdded(models.Model):
     images = models.ManyToManyField('PerevalImages')
     status = models.CharField(choices=STATUS, default='new', max_length=8)
 
+    def __str__(self):
+        return f"{self.title} or {self.beauty_title}"
+
 
 class Coords(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     height = models.FloatField()
 
+    def __str__(self):
+        return f"{self.latitude} {self.longitude} {self.height}"
+
 
 class PerevalImages(models.Model):
     img = models.ImageField(upload_to='uploads/')
     image_name = models.CharField(max_length=255)
 
+    def __str__(self):
+        return f"{self.image_name}"
+
 
 class PerevalAreas(models.Model):
     id_parent = models.IntegerField()
     title = models.TextField()
+
+    def __str__(self):
+        return f"{self.title}"
