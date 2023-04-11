@@ -36,7 +36,7 @@ class PerevalAddedTests(APITestCase):
             'images': [],
             'status': ''
         }
-    print(PerevalAdded.objects.get().beauty_title)
+
     def test_create_pereval_added_with_valid_payload(self):
         data = self.valid_payload
         response = self.client.post(self.url, data, format='json')
