@@ -9,7 +9,7 @@ class PerevalAddedTests(APITestCase):
     def setUp(self):
         self.url = reverse('submit_data')
         self.valid_payload = {
-            'user': 1,
+            'user': 2,
             'beauty_title': 'Test Beauty Title',
             'title': 'Test Title',
             'other_titles': 'Test Other Titles',
@@ -18,8 +18,8 @@ class PerevalAddedTests(APITestCase):
             'summer_level': 'Test Summer Level',
             'autumn_level': 'Test Autumn Level',
             'spring_level': 'Test Spring Level',
-            'coord_id': 1,
-            'images': [1, 2],
+            'coord_id': 2,
+            'images': [2],
             'status': 'new'
         }
         self.invalid_payload = {
