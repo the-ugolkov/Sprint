@@ -34,12 +34,6 @@ class Coords(models.Model):
     height = models.FloatField()
 
 
-class Level(models.Model):
-    pereval_added = models.ForeignKey(PerevalAdded, on_delete=models.CASCADE)
-    season = models.CharField(max_length=255)
-    difficulty_level = models.CharField(max_length=255)
-
-
 class PerevalImages(models.Model):
     img = models.ImageField(upload_to='uploads/')
     image_name = models.CharField(max_length=255)
