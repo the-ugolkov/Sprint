@@ -9,9 +9,9 @@ class PerevalAddedTests(APITestCase):
     def setUp(self):
         self.url = reverse('submit_data')
         self.user = Users.objects.create(first_name='TestUser', last_name='TestUser', password='testpassword',
-                                         email='123', otc='TestUser')  # Создаем тестового пользователя
-        self.coord = Coords.objects.create(latitude=1.0, longitude=2.0, height=2.0)  # Создаем тестовые координаты
-        self.img = PerevalImages.objects.create(img='testimage.jpg', image_name='img')  # Создаем тестовое изображение
+                                         email='TestEmail', otc='TestUser')
+        self.coord = Coords.objects.create(latitude=1.0, longitude=2.0, height=2.0)
+        self.img = PerevalImages.objects.create(img='testimage.jpg', image_name='testimage')
         self.valid_payload = {
             'user': self.user.pk,
             'beauty_title': 'Test Beauty Title',
