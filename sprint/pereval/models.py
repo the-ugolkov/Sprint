@@ -10,6 +10,9 @@ class Users(models.Model):
     last_name = models.CharField(max_length=255)
     otc = models.CharField(max_length=255)
 
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
 
 class PerevalAdded(models.Model):
     user = models.ForeignKey('Users', on_delete=models.CASCADE)
