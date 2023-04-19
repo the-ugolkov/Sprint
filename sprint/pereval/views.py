@@ -1,8 +1,11 @@
+import django_filters
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from pereval.filters import PerevalFilter
 from pereval.models import PerevalAdded
 from pereval.serializers import PerevalAddedSerializer, PerevalAddedUpdateSerializer
 
@@ -10,6 +13,13 @@ from pereval.serializers import PerevalAddedSerializer, PerevalAddedUpdateSerial
 class PerevalViewSet(ModelViewSet):
     queryset = PerevalAdded.objects.all()
     serializer_class = PerevalAddedSerializer
+
+
+class PerevalList(ListAPIView):
+    queryset = PerevalAdded.objects.all()
+    serializer_class = PerevalAddedSerializer
+    filterset_class = PerevalFilter
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
 
 
 @api_view(['POST'])
@@ -47,14 +57,3 @@ def update_pereval(request, pk):
         serializer.save()
         return Response({'state': 1}, status=status.HTTP_200_OK)
     return Response({'state': 0, 'message': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET'])
-def get_data_by_email(request):
-    email = request.query_param.get('user__email')
-    if email is None:
-        return Response({'error': 'user__email parameter is required'}, status=400)
-
-    data = PerevalAdded.objects.filter(user__email=email)
-    serializer = PerevalAddedSerializer(data, many=True)
-    return Response(serializer.data)
