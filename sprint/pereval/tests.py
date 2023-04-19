@@ -41,6 +41,19 @@ class PerevalAddedTests(APITestCase):
             'images': [],
             'status': ''
         }
+        self.valid_update = {
+            "user": self.user.id,
+            "beauty_title": "Updated beauty title",
+            "title": "Updated title",
+            "other_titles": "Updated other titles",
+            "connect": "Updated connect",
+            "winter_level": "Updated winter level",
+            "summer_level": "Updated summer level",
+            "autumn_level": "Updated autumn level",
+            "spring_level": "Updated spring level",
+            "coord_id": self.coord.id,
+            "status": "new"
+        }
 
     def test_create_pereval_added_with_valid_payload(self):
         data = self.valid_payload
@@ -69,11 +82,48 @@ class PerevalAddedTests(APITestCase):
                                               spring_level='Test Spring Level',
                                               coord_id=coord,
                                               status='new')
-        response = self.client.get(self.url_get)
+        url = reverse('get_data', args=[pereval.pk])
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(PerevalAdded.objects.get().beauty_title, 'Test Beauty Title')
 
     def test_get_not_existing_pereval(self):
-        url = reverse('get_data', kwargs={'pk': 2})
-        response = self.client.get(url)
+        response = self.client.get(self.url_get)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_edit_pereval_added_with_valid_update(self):
+        pereval = PerevalAdded.objects.create(user=self.user,
+                                              beauty_title='Test Beauty Title',
+                                              title='Test Title',
+                                              other_titles='Test Other Titles',
+                                              connect='Test Connect',
+                                              winter_level='Test Winter Level',
+                                              summer_level='Test Summer Level',
+                                              autumn_level='Test Autumn Level',
+                                              spring_level='Test Spring Level',
+                                              coord_id=self.coord,
+                                              status='new')
+        url = reverse('update_data', args=[pereval.pk])
+        response = self.client.patch(url, self.valid_update, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['state'], 1)
+        self.assertEqual(PerevalAdded.objects.get().beauty_title,
+                         self.valid_update['beauty_title'])
+
+    def test_edit_pereval_added_with_invalid_update(self):
+        pereval = PerevalAdded.objects.create(user=self.user,
+                                              beauty_title='Test Beauty Title',
+                                              title='Test Title',
+                                              other_titles='Test Other Titles',
+                                              connect='Test Connect',
+                                              winter_level='Test Winter Level',
+                                              summer_level='Test Summer Level',
+                                              autumn_level='Test Autumn Level',
+                                              spring_level='Test Spring Level',
+                                              coord_id=self.coord,
+                                              status='accepted')
+        url = reverse('update_data', args=[pereval.pk])
+        response = self.client.patch(url, self.valid_update, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['state'], 0)
+        self.assertEqual(response.data['message'], 'Pereval status is not "new"')

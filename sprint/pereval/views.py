@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from pereval.models import PerevalAdded
-from pereval.serializers import PerevalAddedSerializer
+from pereval.serializers import PerevalAddedSerializer, PerevalAddedUpdateSerializer
 
 
 class PerevalViewSet(ModelViewSet):
@@ -31,6 +31,7 @@ def get_data(request, pk):
     serializer = PerevalAddedSerializer(pereval)
     return Response(serializer.data)
 
+
 @api_view(['PATCH'])
 def update_pereval(request, pk):
     try:
@@ -38,12 +39,10 @@ def update_pereval(request, pk):
     except PerevalAdded.DoesNotExist:
         return Response({'state': 0, 'message': 'Pereval not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    if pereval.status != 'nev':
+    if pereval.status != 'new':
         return Response({'state': 0, 'message': 'Pereval status is not "new"'}, status=status.HTTP_400_BAD_REQUEST)
 
-    exclude_fields = ['email', 'last_name', 'first_name', 'password', 'otc']
-
-    serializer = PerevalAddedSerializer(pereval, dete=request.data, partial=True, exclude=exclude_fields)
+    serializer = PerevalAddedUpdateSerializer(pereval, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response({'state': 1}, status=status.HTTP_200_OK)
