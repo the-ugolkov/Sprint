@@ -47,3 +47,14 @@ def update_pereval(request, pk):
         serializer.save()
         return Response({'state': 1}, status=status.HTTP_200_OK)
     return Response({'state': 0, 'message': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_data_by_email(request):
+    email = request.query_param.get('user__email')
+    if email is None:
+        return Response({'error': 'user__email parameter is required'}, status=400)
+
+    data = PerevalAdded.objects.filter(user__email=email)
+    serializer = PerevalAddedSerializer(data, many=True)
+    return Response(serializer.data)
