@@ -20,4 +20,12 @@ def submit_data(request):
     return Response(serializer.errors, status=400)
 
 
+@api_view(['GET'])
+def get_data(request, pk):
+    try:
+        pereval = PerevalAdded.objects.get(pk=pk)
+    except PerevalAdded.DoesNotExist:
+        return Response(status=404)
 
+    serializer = PerevalAddedSerializer(pereval)
+    return Response(serializer.data)
