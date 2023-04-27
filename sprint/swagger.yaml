@@ -1,0 +1,277 @@
+openapi: "3.0.0"
+info:
+  title: "API  для хранения информации о перевалах"
+  description: "API документация"
+  version: "1.0.0"
+paths:
+  /submitData/:
+    get:
+      tags:
+        - Перевал
+      summary: "Получить список перевалов"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Perevals"
+  /submitData/create/:
+    post:
+      tags:
+        - Перевал
+      summary: "Создание нового еревала"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Pereval"
+      responses:
+        201:
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pereval"
+        400:
+          description: "Bad Request"
+  /submitData/{pk}/:
+    parameters:
+      - name: pk
+        in: path
+        required: true
+        description: "Идентификатор объекта PerevalAdded"
+        schema:
+          type: integer
+    get:
+      tags:
+        - Перевал
+      summary: "Информация о перевале по идентификатору"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pereval"
+        404:
+          description: "Not Found"
+  /submitData/{pk}/update/:
+    parameters:
+      - name: pk
+        in: path
+        required: true
+        description: "Идентификатор объекта PerevalAdded"
+        schema:
+          type: integer
+    patch:
+      tags:
+        - Перевал
+      summary: "Изменение перевала"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PerevalUpdate"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pereval"
+        400:
+          description: "Bad Request"
+        404:
+          description: "Not Found"
+components:
+  schemas:
+    Users:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          maxLength: 255
+          format: email
+        password:
+          type: string
+          maxLength: 255
+        first_name:
+          type: string
+          maxLength: 255
+        last_name:
+          type: string
+          maxLength: 255
+        otc:
+          type: string
+          maxLength: 255
+      required:
+        - email
+        - password
+        - first_name
+        - last_name
+        - otc
+    Pereval:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          $ref: '#/components/schemas/Users'
+        beauty_title:
+          type: string
+          maxLength: 255
+        title:
+          type: string
+          maxLength: 255
+        other_titles:
+          type: string
+          maxLength: 255
+        connect:
+          type: string
+        add_time:
+          type: string
+          format: date-time
+        date_added:
+          type: string
+          format: date-time
+        winter_level:
+          type: string
+          maxLength: 100
+        summer_level:
+          type: string
+          maxLength: 100
+        autumn_level:
+          type: string
+          maxLength: 100
+        spring_level:
+          type: string
+          maxLength: 100
+        coord_id:
+          $ref: '#/components/schemas/Coords'
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/PerevalImages'
+        status:
+          type: string
+          enum:
+            - new
+            - in_progress
+            - completed
+          maxLength: 8
+      required:
+        - user
+        - beauty_title
+        - title
+        - connect
+        - winter_level
+        - summer_level
+        - autumn_level
+        - spring_level
+        - coord_id
+        - status
+    Perevals:
+      type: array
+      items:
+        $ref: "#/components/schemas/Pereval"
+    Coords:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+        height:
+          type: number
+          format: float
+      required:
+        - latitude
+        - longitude
+        - height
+    PerevalImages:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        img:
+          type: string
+          format: binary
+        image_name:
+          type: string
+          maxLength: 255
+      required:
+        - img
+        - image_name
+    PerevalUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        beauty_title:
+          type: string
+          maxLength: 255
+        title:
+          type: string
+          maxLength: 255
+        other_titles:
+          type: string
+          maxLength: 255
+        connect:
+          type: string
+        add_time:
+          type: string
+          format: date-time
+        date_added:
+          type: string
+          format: date-time
+        winter_level:
+          type: string
+          maxLength: 100
+        summer_level:
+          type: string
+          maxLength: 100
+        autumn_level:
+          type: string
+          maxLength: 100
+        spring_level:
+          type: string
+          maxLength: 100
+        coord_id:
+          $ref: '#/components/schemas/Coords'
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/PerevalImages'
+        status:
+          type: string
+          enum:
+            - new
+            - in_progress
+            - completed
+          maxLength: 8
+      required:
+        - beauty_title
+        - title
+        - connect
+        - winter_level
+        - summer_level
+        - autumn_level
+        - spring_level
+        - coord_id
+        - status
